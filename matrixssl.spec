@@ -13,7 +13,6 @@ Patch0:		matrixssl-shared_and_static.diff
 Patch1:		matrixssl-1.8.1-debian.diff
 BuildRequires:	dietlibc-devel >= 0.20
 BuildRequires:	dos2unix
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 %description
 PeerSec MatrixSSL is an embedded SSL implementation designed for 
