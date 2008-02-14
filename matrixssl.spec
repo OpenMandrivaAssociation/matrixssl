@@ -7,6 +7,7 @@ Version:	1.8.3
 Release:	%mkrel 1
 License:	GPL
 Group:		System/Libraries
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL:		http://www.matrixssl.org/
 Source0:	%{name}-1-8-3-open.tar.gz
 Patch0:		matrixssl-shared_and_static.diff
