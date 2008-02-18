@@ -1,7 +1,7 @@
 %define	major	1
 %define libname	%mklibname %{name} %{major}
 
-Summary:	MatrixSSL is an embedded SSL implementation
+Summary:	Embedded SSL implementation
 Name:		matrixssl
 Version:	1.8.3
 Release:	%mkrel 1
@@ -26,7 +26,7 @@ well documented and contains portability layers for additional
 operating systems, cipher suites, and cryptography providers. 
 
 %package -n	%{libname}
-Summary:	MatrixSSL is an embedded SSL implementation
+Summary:	Embedded SSL implementation
 Group:          System/Libraries
 
 %description -n	%{libname}
