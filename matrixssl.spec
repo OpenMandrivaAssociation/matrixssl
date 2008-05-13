@@ -1,19 +1,20 @@
-%define	major	1
-%define libname	%mklibname %{name} %{major}
+%define	major 1
+%define libname %mklibname %{name} %{major}
+%define develname %mklibname %{name} -d
 
 Summary:	Embedded SSL implementation
 Name:		matrixssl
-Version:	1.8.3
-Release:	%mkrel 2
+Version:	1.8.5
+Release:	%mkrel 1
 License:	GPL
 Group:		System/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 URL:		http://www.matrixssl.org/
-Source0:	%{name}-1-8-3-open.tar.gz
+Source0:	%{name}-1-8-5-open.tgz
 Patch0:		matrixssl-shared_and_static.diff
 Patch1:		matrixssl-1.8.1-debian.diff
 BuildRequires:	dietlibc-devel >= 0.20
 BuildRequires:	dos2unix
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 PeerSec MatrixSSL is an embedded SSL implementation designed for 
@@ -39,15 +40,17 @@ and implementations of RSA, 3DES, ARC4, SHA1, and MD5. The source is
 well documented and contains portability layers for additional 
 operating systems, cipher suites, and cryptography providers. 
 
-%package -n	%{libname}-devel
+%package -n	%{develname}
 Summary:	Static library and header files for the %{name} library
 Group:		Development/C
-Obsoletes:	%{name}-devel lib%{name}-devel
-Provides:	%{name}-devel lib%{name}-devel
 Requires:	%{libname} = %{version}
 Requires:	dietlibc-devel >= 0.20
+Provides:	%{name}-devel = %{version}-%{release}
+Provides:	lib%{name}-devel = %{version}-%{release}
+Obsoletes:	%{name}-devel
+Obsoletes:	%{mklibname matrixssl -d 1}
 
-%description -n	%{libname}-devel
+%description -n	%{develname}
 PeerSec MatrixSSL is an embedded SSL implementation designed for 
 small footprint devices and applications requiring low overhead per 
 connection. The library is less than 50K on disk with cipher suites.
@@ -62,7 +65,7 @@ glibc and dietlibc.
 
 %prep
 
-%setup -q -n %{name}-1-8-3-open
+%setup -q -n %{name}-1-8-5-open
 %patch0 -p0
 %patch1 -p1
 
@@ -85,7 +88,7 @@ make -C dietlibc/src CC="diet -Os gcc" \
     static
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
@@ -120,13 +123,13 @@ rm -f examples/*.p12
 %postun -n %{libname} -p /sbin/ldconfig
 
 %clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
 %{_libdir}/*.so.*
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-,root,root)
 %doc doc/*.pdf examples
 %{_includedir}/*
@@ -134,5 +137,3 @@ rm -f examples/*.p12
 %{_libdir}/*.a
 %{_prefix}/lib/dietlibc/include/*
 %{_prefix}/lib/dietlibc/lib/*.a
-
-
