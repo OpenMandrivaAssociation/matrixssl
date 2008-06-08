@@ -5,14 +5,14 @@
 Summary:	Embedded SSL implementation
 Name:		matrixssl
 Version:	1.8.5
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	GPL
 Group:		System/Libraries
 URL:		http://www.matrixssl.org/
 Source0:	%{name}-1-8-5-open.tgz
 Patch0:		matrixssl-shared_and_static.diff
 Patch1:		matrixssl-1.8.1-debian.diff
-BuildRequires:	dietlibc-devel >= 0.20
+BuildRequires:	dietlibc-devel >= 0.32
 BuildRequires:	dos2unix
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -44,7 +44,7 @@ operating systems, cipher suites, and cryptography providers.
 Summary:	Static library and header files for the %{name} library
 Group:		Development/C
 Requires:	%{libname} = %{version}
-Requires:	dietlibc-devel >= 0.20
+Requires:	dietlibc-devel >= 0.32
 Provides:	%{name}-devel = %{version}-%{release}
 Provides:	lib%{name}-devel = %{version}-%{release}
 Obsoletes:	%{name}-devel
