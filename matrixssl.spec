@@ -5,7 +5,7 @@
 Summary:	Embedded SSL implementation
 Name:		matrixssl
 Version:	1.8.5
-Release:	%mkrel 2
+Release:	%mkrel 3
 License:	GPL
 Group:		System/Libraries
 URL:		http://www.matrixssl.org/
