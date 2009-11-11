@@ -4,16 +4,15 @@
 
 Summary:	Embedded SSL implementation
 Name:		matrixssl
-Version:	1.8.7d
+Version:	1.8.8
 Release:	%mkrel 1
-License:	GPL
+License:	GPLv2
 Group:		System/Libraries
 URL:		http://www.matrixssl.org/
-Source0:	%{name}-1-8-7d-open.tgz
+Source0:	%{name}-1-8-8-open.tgz
 Patch0:		matrixssl-shared_and_static.diff
 Patch1:		matrixssl-1.8.1-debian.diff
 BuildRequires:	dietlibc-devel >= 0.32
-BuildRequires:	dos2unix
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -65,7 +64,7 @@ glibc and dietlibc.
 
 %prep
 
-%setup -q -n %{name}-1-8-7d-open
+%setup -q -n %{name}-1-8-8-open
 %patch0 -p0
 %patch1 -p1
 
@@ -73,9 +72,6 @@ glibc and dietlibc.
 mkdir -p dietlibc
 cp -rp src dietlibc/
 cp matrixSsl.h matrixCommon.h dietlibc/
-
-# strip away annoying ^M
-find -type f -exec dos2unix -U {} \;
 
 %build
 
@@ -131,6 +127,7 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
+%doc license.txt
 %{_libdir}/*.so.*
 
 %files -n %{develname}
