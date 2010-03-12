@@ -1,17 +1,17 @@
-%define	major 1
+%define	major 3
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
 Summary:	Embedded SSL implementation
 Name:		matrixssl
-Version:	1.8.8
+Version:	3.1
 Release:	%mkrel 1
 License:	GPLv2
 Group:		System/Libraries
 URL:		http://www.matrixssl.org/
-Source0:	%{name}-1-8-8-open.tgz
-Patch0:		matrixssl-shared_and_static.diff
-Patch1:		matrixssl-1.8.1-debian.diff
+Source0:	%{name}-3-1-open.tgz
+Patch0:		matrixssl-3.1-soname_fix.diff
+Patch1:		matrixssl-3-1-strfmt_fix.diff
 BuildRequires:	dietlibc-devel >= 0.32
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -64,55 +64,53 @@ glibc and dietlibc.
 
 %prep
 
-%setup -q -n %{name}-1-8-8-open
+%setup -q -n %{name}-3-1-open
 %patch0 -p0
-%patch1 -p1
+%patch1 -p0
 
 # prepare for dietlibc
 mkdir -p dietlibc
-cp -rp src dietlibc/
-cp matrixSsl.h matrixCommon.h dietlibc/
+cp -rp core crypto matrixssl Makefile dietlibc/
 
 %build
 
 # first make the standard glibc stuff...
-make -C src DFLAGS="%{optflags} -fPIC"
+make DFLAGS="%{optflags} -fPIC"
 
 # now make the dietlibc static library
-make -C dietlibc/src CC="diet -Os gcc" \
+make -C dietlibc CC="diet -Os gcc" \
+    DFLAGS="" \
     LDFLAGS="-nostdlib" \
-    static
+    libmatrixssl.a
 
 %install
 rm -rf %{buildroot}
 
-install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
 install -d %{buildroot}%{_prefix}/lib/dietlibc/{lib,include}
-
-# fix headers
-perl -pi -e "s|src/matrixConfig\.h|matrixConfig\.h|g" matrixCommon.h dietlibc/matrixCommon.h
+install -d %{buildroot}%{_includedir}/matrixssl/core
+install -d %{buildroot}%{_includedir}/matrixssl/crypto/{digest,keyformat,math,pubkey,symmetric}
 
 # install the glibc version
-install -m0755 src/lib%{name}.so %{buildroot}%{_libdir}/lib%{name}.so.%{version}
+install -m0755 lib%{name}.so.%{major} %{buildroot}%{_libdir}/lib%{name}.so.%{version}
 ln -snf lib%{name}.so.%{version} %{buildroot}%{_libdir}/lib%{name}.so.%{major}
 ln -snf lib%{name}.so.%{version} %{buildroot}%{_libdir}/lib%{name}.so
-install -m0644 src/lib%{name}.a %{buildroot}%{_libdir}/
-install -m0644 matrixSsl.h %{buildroot}%{_includedir}/
-install -m0644 matrixCommon.h %{buildroot}%{_includedir}/
-install -m0644 src/matrixConfig.h %{buildroot}%{_includedir}/
+install -m0644 lib%{name}.a %{buildroot}%{_libdir}/
+
+# install the headers
+install -m0644 core/*.h %{buildroot}%{_includedir}/matrixssl/core/
+install -m0644 crypto/*.h %{buildroot}%{_includedir}/matrixssl/crypto/
+install -m0644 crypto/digest/*.h %{buildroot}%{_includedir}/matrixssl/crypto/digest/
+install -m0644 crypto/keyformat/*.h %{buildroot}%{_includedir}/matrixssl/crypto/keyformat/
+install -m0644 crypto/math/*.h %{buildroot}%{_includedir}/matrixssl/crypto/math/
+install -m0644 crypto/pubkey/*.h %{buildroot}%{_includedir}/matrixssl/crypto/pubkey/
+install -m0644 crypto/symmetric/*.h %{buildroot}%{_includedir}/matrixssl/crypto/symmetric/
+install -m0644 matrixssl/matrixsslApi.h %{buildroot}%{_includedir}/matrixssl/
+install -m0644 matrixssl/matrixsslConfig.h %{buildroot}%{_includedir}/matrixssl/
+install -m0644 matrixssl/matrixssllib.h %{buildroot}%{_includedir}/matrixssl/
 
 # install the dietlibc version
-install -m0644 dietlibc/src/lib%{name}.a %{buildroot}%{_prefix}/lib/dietlibc/lib/
-install -m0644 dietlibc/matrixSsl.h %{buildroot}%{_prefix}/lib/dietlibc/include/
-install -m0644 dietlibc/matrixCommon.h %{buildroot}%{_prefix}/lib/dietlibc/include/
-install -m0644 dietlibc/src/matrixConfig.h %{buildroot}%{_prefix}/lib/dietlibc/include/
-
-# cleanup the examples directory
-rm -f examples/*.sln
-rm -f examples/*.vcproj
-rm -f examples/*.pem
-rm -f examples/*.p12
+install -m0644 dietlibc/lib%{name}.a %{buildroot}%{_prefix}/lib/dietlibc/lib/
 
 %if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
@@ -127,14 +125,12 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%doc license.txt
 %{_libdir}/*.so.*
 
 %files -n %{develname}
 %defattr(-,root,root)
-%doc doc/*.pdf examples
-%{_includedir}/*
+%doc doc/*.pdf
+%{_includedir}/matrixssl
 %{_libdir}/*.so
 %{_libdir}/*.a
-%{_prefix}/lib/dietlibc/include/*
 %{_prefix}/lib/dietlibc/lib/*.a
