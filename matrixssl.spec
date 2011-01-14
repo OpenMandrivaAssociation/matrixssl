@@ -4,12 +4,12 @@
 
 Summary:	Embedded SSL implementation
 Name:		matrixssl
-Version:	3.1.3
+Version:	3.1.4
 Release:	%mkrel 1
 License:	GPLv2
 Group:		System/Libraries
 URL:		http://www.matrixssl.org/
-Source0:	%{name}-3-1-3-open.tgz
+Source0:	%{name}-3-1-4-open.tgz
 Patch0:		matrixssl-3.1.1-soname-fix.patch
 BuildRequires:	dietlibc-devel >= 0.32
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -62,7 +62,7 @@ This package contains the static libraries and headers for both
 glibc and dietlibc.
 
 %prep
-%setup -q -n %{name}-3-1-3-open
+%setup -q -n %{name}-3-1-4-open
 %patch0 -p0
 
 # prepare for dietlibc
