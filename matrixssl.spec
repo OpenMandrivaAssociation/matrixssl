@@ -4,13 +4,14 @@
 
 Summary:	Embedded SSL implementation
 Name:		matrixssl
-Version:	3.1.4
+Version:	3.2.1
 Release:	%mkrel 1
 License:	GPLv2
 Group:		System/Libraries
 URL:		http://www.matrixssl.org/
-Source0:	%{name}-3-1-4-open.tgz
-Patch0:		matrixssl-3.1.1-soname-fix.patch
+Source0:	%{name}-3-2-1-open.tgz
+Patch0:		matrixssl-3.2.1-no_strip.diff
+Patch2:		matrixssl-3.2.1-soname.diff
 BuildRequires:	dietlibc-devel >= 0.32
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
@@ -62,7 +63,8 @@ This package contains the static libraries and headers for both
 glibc and dietlibc.
 
 %prep
-%setup -q -n %{name}-3-1-4-open
+
+%setup -q -n %{name}-3-2-1-open
 %patch0 -p0
 
 # prepare for dietlibc
@@ -72,7 +74,7 @@ cp -rp core crypto matrixssl Makefile dietlibc/
 %build
 
 # first make the standard glibc stuff...
-make DFLAGS="%{optflags} -fPIC"
+make DFLAGS="%{optflags} -fPIC" MAJOR="%{major}"
 
 # now make the dietlibc static library
 make -C dietlibc CC="diet -Os gcc" \
@@ -89,9 +91,9 @@ install -d %{buildroot}%{_includedir}/matrixssl/core
 install -d %{buildroot}%{_includedir}/matrixssl/crypto/{digest,keyformat,math,pubkey,symmetric}
 
 # install the glibc version
-#install -m0755 lib%{name}.so.%{major} %{buildroot}%{_libdir}/lib%{name}.so.%version
+install -m0755 lib%{name}.so %{buildroot}%{_libdir}/lib%{name}.so.%{version}
 ln -snf lib%{name}.so.%{version} %{buildroot}%{_libdir}/lib%{name}.so.%{major}
-ln -snf lib%{name}.so.%{version} %{buildroot}%{_libdir}/lib%{name}.so
+ln -snf lib%{name}.so.%{major} %{buildroot}%{_libdir}/lib%{name}.so
 install -m0644 lib%{name}.a %{buildroot}%{_libdir}/
 
 # install the headers
@@ -114,7 +116,7 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/*.so*
+%{_libdir}/*.so.*
 
 %files -n %{develname}
 %defattr(-,root,root)
