@@ -1,0 +1,12 @@
+Index: Makefile
+===================================================================
+--- Makefile
++++ Makefile	2010-04-24 10:57:59.000000000 +0200
+@@ -134,7 +134,6 @@
+ #
+ $(SSL_DYN): $(CORE_OBJECTS) $(CRYPTO_OBJECTS) $(SSL_OBJECTS)
+ 	$(CC) $(SHARED) -o $@ $^ $(LDFLAGS)
+-	$(STRIP) $(SSL_DYN)
+ 
+ #
+ # Build the static SSL library
