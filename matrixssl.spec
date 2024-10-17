@@ -8,7 +8,7 @@ Version:	3.4.1
 Release:	1
 License:	GPLv2
 Group:		System/Libraries
-URL:		http://www.matrixssl.org/
+URL:		https://www.matrixssl.org/
 Source0:	%{name}-3-2-1-open.tgz
 Patch0:		matrixssl-3.2.1-no_strip.diff
 Patch2:		matrixssl-3.2.1-soname.diff
