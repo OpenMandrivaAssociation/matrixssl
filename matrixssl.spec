@@ -12,6 +12,7 @@ URL:		https://www.matrixssl.org/
 Source0:	%{name}-3-2-1-open.tgz
 Patch0:		matrixssl-3.2.1-no_strip.diff
 Patch2:		matrixssl-3.2.1-soname.diff
+BuildRequires:	make
 BuildRequires:	dietlibc-devel >= 0.32
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
