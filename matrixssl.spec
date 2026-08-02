@@ -1,15 +1,15 @@
-%define	major 3
+%define	major 4
 %define libname %mklibname %{name} %{major}
 %define develname %mklibname %{name} -d
 
 Summary:	Embedded SSL implementation
 Name:		matrixssl
-Version:	3.4.1
+Version:	4.6.0
 Release:	1
 License:	GPLv2
 Group:		System/Libraries
 URL:		https://www.matrixssl.org/
-Source0:	%{name}-3-2-1-open.tgz
+Source0:	%{name}-4-6-0-open.tar.gz
 Patch0:		matrixssl-3.2.1-no_strip.diff
 Patch2:		matrixssl-3.2.1-soname.diff
 BuildRequires:	make
@@ -65,8 +65,9 @@ glibc and dietlibc.
 
 %prep
 
-%setup -q -n %{name}-3-2-1-open
-%patch0 -p0
+%setup -q -n %{name}-4-6-0-open
+%patch -P 0 -p0
+%patch -P 2 -p0
 
 # prepare for dietlibc
 mkdir -p dietlibc
